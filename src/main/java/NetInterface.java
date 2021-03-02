@@ -4,7 +4,7 @@ import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
 
-public class Main {
+public class NetInterface {
 
     public static void main(String[] args) throws SocketException {
         printLine();
