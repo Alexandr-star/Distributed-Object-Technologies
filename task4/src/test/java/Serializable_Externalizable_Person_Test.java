@@ -20,71 +20,62 @@ class Serializable_Externalizable_Person_Test {
     @Test
     void SerializationFromObjectToJSON() throws IOException
     {
-        try {
-            //data
-            Address address = new Address(STREET_ADDRESS, CITY, POSTAL_CODE);
+        Address address = new Address(STREET_ADDRESS, CITY, POSTAL_CODE);
 
-            Telephone[] telephones = {
-                    new Telephone(FIRST_PHONE_NUMBERS),
-                    new Telephone(SECOND_PHONE_NUMBERS)
-            };
+        Telephone[] telephones = {
+                new Telephone(FIRST_PHONE_NUMBERS),
+                new Telephone(SECOND_PHONE_NUMBERS)
+        };
 
-            Person person = new Person(
-                    FIRST_NAME,
-                    LAST_NAME,
-                    address,
-                    telephones
-            );
+        Person person = new Person(
+                FIRST_NAME,
+                LAST_NAME,
+                address,
+                telephones
+        );
 
-            //Serialization
-            StringWriter writer = new StringWriter();
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(writer, person);
-            String personJson = writer.toString();
-            String actualData = getActualDataForSerialization();
+        //Serialization
+        StringWriter writer = new StringWriter();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(writer, person);
+        String personJson = writer.toString();
+        String exceptedDataForSerialization = getExceptedDataForSerialization();
 
-            //assert
-            assertEquals(personJson, actualData);
-        } catch (Exception e) {
-            fail("Exception thrown during test: " + e.toString());
-        }
+        //assert
+        assertEquals(exceptedDataForSerialization, personJson);
     }
 
     @Test
-    void ExternalizableFromJSONToObject() {
-        try {
-            //data
-            Address address = new Address(STREET_ADDRESS, CITY, POSTAL_CODE);
+    void ExternalizableFromJSONToObject() throws IOException {
+        //data
+        Address address = new Address(STREET_ADDRESS, CITY, POSTAL_CODE);
 
-            Telephone[] telephones = {
-                    new Telephone(FIRST_PHONE_NUMBERS),
-                    new Telephone(SECOND_PHONE_NUMBERS)
-            };
+        Telephone[] telephones = {
+                new Telephone(FIRST_PHONE_NUMBERS),
+                new Telephone(SECOND_PHONE_NUMBERS)
+        };
 
-            Person person = new Person(
-                    FIRST_NAME,
-                    LAST_NAME,
-                    address,
-                    telephones
-            );
+        Person person = new Person(
+                FIRST_NAME,
+                LAST_NAME,
+                address,
+                telephones
+        );
 
-            //Serialization
-            StringWriter writer = new StringWriter();
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(writer, person);
-            String personJson = writer.toString();
+        //Serialization
+        StringWriter writer = new StringWriter();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(writer, person);
+        String personJson = writer.toString();
 
-            //Externalizable
-            Person personFromJson = mapper.readValue(personJson, Person.class);
+        //Externalizable
+        Person personFromJson = mapper.readValue(personJson, Person.class);
 
-            //assert
-            assertEquals(personFromJson, person);
-        } catch (Exception e) {
-            fail("Exception thrown during test: " + e.toString());
-        }
+        //assert
+        assertEquals(person, personFromJson);
     }
 
-    private String getActualDataForSerialization() {
+    private String getExceptedDataForSerialization() {
         return "{" +
                     "\"firstName\":\"" + FIRST_NAME+ "\"," +
                     "\"lastName\":\"" + LAST_NAME+ "\"," +
