@@ -1,8 +1,10 @@
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Person implements Serializable {
-    private  String  firstName;
-    private  String  lastName;
+    private String  firstName;
+    private String  lastName;
     private Address address;
     private Telephone[] telephone;
 
@@ -12,6 +14,8 @@ public class Person implements Serializable {
         this.address = address;
         this.telephone = telephone;
     }
+
+    public Person() { }
 
     public Address getAddress() {
         return address;
@@ -53,5 +57,20 @@ public class Person implements Serializable {
                 ", address=" + address +
                 ", telephone=" + telephone +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Arrays.equals(telephone, person.telephone);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(firstName, lastName, address);
+        result = 31 * result + Arrays.hashCode(telephone);
+        return result;
     }
 }

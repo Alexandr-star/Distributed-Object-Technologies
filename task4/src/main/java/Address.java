@@ -1,5 +1,6 @@
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Address implements Serializable {
     private String streetAddress;
@@ -11,6 +12,8 @@ public class Address implements Serializable {
         this.city = city;
         this.postalCode = postalCode;
     }
+
+    public Address() { }
 
     public String getStreetAddress() {
         return streetAddress;
@@ -32,7 +35,7 @@ public class Address implements Serializable {
         return postalCode;
     }
 
-    public void setPostalCode(byte postalCode) {
+    public void setPostalCode(int postalCode) {
         this.postalCode = postalCode;
     }
 
@@ -43,5 +46,18 @@ public class Address implements Serializable {
                 ", city='" + city + '\'' +
                 ", postalCode=" + postalCode +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return postalCode == address.postalCode && Objects.equals(streetAddress, address.streetAddress) && Objects.equals(city, address.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(streetAddress, city, postalCode);
     }
 }

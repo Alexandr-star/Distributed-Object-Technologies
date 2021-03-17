@@ -9,18 +9,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class Serializable_Externalizable_Person_Test {
     private static final String STREET_ADDRESS = "Московское ш., 101, кв.101";
     private static final String CITY = "Ленинград";
-    private static final int POSTAL_CODE = 101101;
+    private static final int POSTAL_CODE = 150001;
 
     private static final String FIRST_PHONE_NUMBERS = "812 123-1234";
     private static final String SECOND_PHONE_NUMBERS = "916 123-4567";
 
     private static final String FIRST_NAME = "Иван";
-    private static final String SECOND_NAME = "Иванов";
+    private static final String LAST_NAME = "Иванов";
 
     @Test
-    void testSerialization() throws IOException
+    void SerializationFromObjectToJSON() throws IOException
     {
         try {
+            //data
             Address address = new Address(STREET_ADDRESS, CITY, POSTAL_CODE);
 
             Telephone[] telephones = {
@@ -30,21 +31,54 @@ class Serializable_Externalizable_Person_Test {
 
             Person person = new Person(
                     FIRST_NAME,
-                    SECOND_NAME,
+                    LAST_NAME,
                     address,
                     telephones
             );
 
+            //Serialization
             StringWriter writer = new StringWriter();
-
             ObjectMapper mapper = new ObjectMapper();
-
             mapper.writeValue(writer, person);
+            String personJson = writer.toString();
+            String actualData = getActualDataForSerialization();
 
-            String result = writer.toString();
-            String actual = getActualDataForSerialization();
+            //assert
+            assertEquals(personJson, actualData);
+        } catch (Exception e) {
+            fail("Exception thrown during test: " + e.toString());
+        }
+    }
 
-            assertEquals(result, actual);
+    @Test
+    void ExternalizableFromJSONToObject() {
+        try {
+            //data
+            Address address = new Address(STREET_ADDRESS, CITY, POSTAL_CODE);
+
+            Telephone[] telephones = {
+                    new Telephone(FIRST_PHONE_NUMBERS),
+                    new Telephone(SECOND_PHONE_NUMBERS)
+            };
+
+            Person person = new Person(
+                    FIRST_NAME,
+                    LAST_NAME,
+                    address,
+                    telephones
+            );
+
+            //Serialization
+            StringWriter writer = new StringWriter();
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(writer, person);
+            String personJson = writer.toString();
+
+            //Externalizable
+            Person personFromJson = mapper.readValue(personJson, Person.class);
+
+            //assert
+            assertEquals(personFromJson, person);
         } catch (Exception e) {
             fail("Exception thrown during test: " + e.toString());
         }
@@ -52,12 +86,12 @@ class Serializable_Externalizable_Person_Test {
 
     private String getActualDataForSerialization() {
         return "{" +
-                    "\"firstName\":\"Иван\"," +
-                    "\"lastName\":\"Иванов\"," +
+                    "\"firstName\":\"" + FIRST_NAME+ "\"," +
+                    "\"lastName\":\"" + LAST_NAME+ "\"," +
                     "\"address\":{" +
-                        "\"streetAddress\":\"Московское ш., 101, кв.101\"," +
-                        "\"city\":\"Ленинград\"," +
-                        "\"postalCode\":101101" +
+                        "\"streetAddress\":\"" + STREET_ADDRESS+ "\"," +
+                        "\"city\":\"" + CITY + "\"," +
+                        "\"postalCode\":" + POSTAL_CODE +
                     "}," +
                     "\"telephone\":[" +
                         "{\"phoneNumber\":\"812 123-1234\"}," +
