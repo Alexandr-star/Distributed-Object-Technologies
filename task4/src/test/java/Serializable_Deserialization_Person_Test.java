@@ -1,8 +1,8 @@
+import deserialization.Deserialization;
 import org.junit.jupiter.api.Test;
-import com.fasterxml.jackson.databind.*;
+import serializeble.Serializable;
 
 import java.io.IOException;
-import java.io.StringWriter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,9 +17,11 @@ class Serializable_Deserialization_Person_Test {
     private static final String FIRST_NAME = "Иван";
     private static final String LAST_NAME = "Иванов";
 
-    @Test
-    void SerializationFromObjectToJSON() throws IOException
-    {
+    private Serializable serializable = new Serializable();
+    private Deserialization deserialization = new Deserialization();
+
+
+    private Object GetPerson() {
         Address address = new Address(STREET_ADDRESS, CITY, POSTAL_CODE);
 
         Telephone[] telephones = {
@@ -27,55 +29,94 @@ class Serializable_Deserialization_Person_Test {
                 new Telephone(SECOND_PHONE_NUMBERS)
         };
 
-        Person person = new Person(
+        return new Person(
                 FIRST_NAME,
                 LAST_NAME,
                 address,
                 telephones
         );
+    }
+
+    @Test
+    void SerializationFromObjectToJSON() throws IOException
+    {
+        //data
+        Object person = GetPerson();
+        String exceptedDataForSerialization = GetJsonData();
 
         //Serialization
-        StringWriter writer = new StringWriter();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(writer, person);
-        String personJson = writer.toString();
-        String exceptedDataForSerialization = getExceptedDataForSerialization();
+        String personJson = serializable.JsonSerialize(person);
 
         //assert
         assertEquals(exceptedDataForSerialization, personJson);
     }
 
     @Test
-    void DeserializationFromJSONToObject() throws IOException {
+    void SerializationFromObjectToYAML() throws IOException {
         //data
-        Address address = new Address(STREET_ADDRESS, CITY, POSTAL_CODE);
-
-        Telephone[] telephones = {
-                new Telephone(FIRST_PHONE_NUMBERS),
-                new Telephone(SECOND_PHONE_NUMBERS)
-        };
-
-        Person person = new Person(
-                FIRST_NAME,
-                LAST_NAME,
-                address,
-                telephones
-        );
+        Object person = GetPerson();
+        String exceptedDataForSerialization = GetYAMLData();
 
         //Serialization
-        StringWriter writer = new StringWriter();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(writer, person);
-        String personJson = writer.toString();
+        String personYaml = serializable.YamlSerialize(person);
 
-        //Externalizable
-        Person personFromJson = mapper.readValue(personJson, Person.class);
+        //assert
+        assertEquals(exceptedDataForSerialization, personYaml);
+    }
+
+    @Test
+    void SerializationFromObjectToXML() throws IOException {
+        //data
+        Object person = GetPerson();
+        String exceptedDataForSerialization = GetXmlData();
+
+        //Serialization
+        String personXml = serializable.XmlSerialize(person);
+
+        //assert
+        assertEquals(exceptedDataForSerialization, personXml);
+    }
+
+    @Test
+    void DeserializationFromJSONToObject() throws IOException {
+        //data
+        Object person = GetPerson();
+        String personJson = serializable.JsonSerialize(person);
+
+        //Deserialization
+        Object personFromJson = deserialization.JsonDeserialize(personJson, Person.class);
 
         //assert
         assertEquals(person, personFromJson);
     }
 
-    private String getExceptedDataForSerialization() {
+    @Test
+    void DeserializationFromYAMLToObject() throws IOException {
+        //data
+        Object person = GetPerson();
+        String personYaml = serializable.YamlSerialize(person);
+
+        //Deserialization
+        Object personFromYaml = deserialization.YamlDeserialize(personYaml, Person.class);
+
+        //assert
+        assertEquals(person, personFromYaml);
+    }
+
+    @Test
+    void DeserializationFromXMLToObject() throws IOException {
+        //data
+        Object person = GetPerson();
+        String personXml = serializable.XmlSerialize(person);
+
+        //Deserialization
+        Object personFromXml = deserialization.XmlDeserialize(personXml, Person.class);
+
+        //assert
+        assertEquals(person, personFromXml);
+    }
+
+    private String GetJsonData() {
         return "{" +
                     "\"firstName\":\"" + FIRST_NAME+ "\"," +
                     "\"lastName\":\"" + LAST_NAME+ "\"," +
@@ -85,9 +126,42 @@ class Serializable_Deserialization_Person_Test {
                         "\"postalCode\":" + POSTAL_CODE +
                     "}," +
                     "\"telephone\":[" +
-                        "{\"phoneNumber\":\"812 123-1234\"}," +
-                        "{\"phoneNumber\":\"916 123-4567\"}" +
+                        "{\"phoneNumber\":\"" + FIRST_PHONE_NUMBERS + "\"}," +
+                        "{\"phoneNumber\":\"" + SECOND_PHONE_NUMBERS + "\"}" +
                     "]" +
                 "}";
+    }
+
+    private String GetYAMLData() {
+        return "---\n" +
+                "firstName: \"" + FIRST_NAME + "\"\n" +
+                "lastName: \""+ LAST_NAME +"\"\n" +
+                "address:\n" +
+                "  streetAddress: \"" + STREET_ADDRESS + "\"\n" +
+                "  city: \""+ CITY + "\"\n" +
+                "  postalCode: " + POSTAL_CODE + "\n" +
+                "telephone:\n" +
+                "- phoneNumber: \"" + FIRST_PHONE_NUMBERS + "\"\n" +
+                "- phoneNumber: \"" + SECOND_PHONE_NUMBERS + "\"\n";
+    }
+
+    private String GetXmlData() {
+        return "<Person>" +
+                    "<firstName>"+ FIRST_NAME+"</firstName>" +
+                    "<lastName>" + LAST_NAME + "</lastName>" +
+                    "<address>" +
+                        "<streetAddress>" + STREET_ADDRESS + "</streetAddress>" +
+                        "<city>" + CITY + "</city>" +
+                        "<postalCode>" + POSTAL_CODE + "</postalCode>" +
+                    "</address>" +
+                    "<telephone>" +
+                        "<telephone>" +
+                            "<phoneNumber>" + FIRST_PHONE_NUMBERS + "</phoneNumber>" +
+                        "</telephone>" +
+                        "<telephone>" +
+                            "<phoneNumber>" + SECOND_PHONE_NUMBERS + "</phoneNumber>" +
+                        "</telephone>" +
+                    "</telephone>" +
+                "</Person>";
     }
 }
