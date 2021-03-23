@@ -6,7 +6,7 @@ import java.io.StringWriter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class Serializable_Externalizable_Person_Test {
+class Serializable_Deserialization_Person_Test {
     private static final String STREET_ADDRESS = "Московское ш., 101, кв.101";
     private static final String CITY = "Ленинград";
     private static final int POSTAL_CODE = 150001;
@@ -46,7 +46,7 @@ class Serializable_Externalizable_Person_Test {
     }
 
     @Test
-    void ExternalizableFromJSONToObject() throws IOException {
+    void DeserializationFromJSONToObject() throws IOException {
         //data
         Address address = new Address(STREET_ADDRESS, CITY, POSTAL_CODE);
 
