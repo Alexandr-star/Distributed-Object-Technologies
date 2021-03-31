@@ -1,5 +1,6 @@
-package org.acme.getting.started;
+package org.acme.getting.resource;
 
+import org.acme.getting.started.GreetingService;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.inject.Inject;
