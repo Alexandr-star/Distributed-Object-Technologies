@@ -5,12 +5,16 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Person implements Serializable {
+    private int id;
     private String  firstName;
     private String  lastName;
+    private String email;
     private Address address;
     private Telephone[] telephone;
 
-    public Person(String firstName, String lastName, Address address, Telephone[] telephone) {
+    public Person(int id, String email, String firstName, String lastName, Address address, Telephone[] telephone) {
+        this.id = id;
+        this.email = email;
         this.firstName = firstName;
         this.lastName  = lastName;
         this.address = address;
@@ -18,6 +22,22 @@ public class Person implements Serializable {
     }
 
     public Person() { }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public Address getAddress() {
         return address;
@@ -54,6 +74,8 @@ public class Person implements Serializable {
     @Override
     public String toString() {
         return "Person{" +
+                "id='" + id + '\'' +
+                "email='" + email + '\'' +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address=" + address +

@@ -23,4 +23,14 @@ public class RestClientTest {
         String responseText = response.body().string();
         System.out.println(responseText);
     }
+
+    //Create tests
+
+    void getOnePerson() throws IOException {
+
+    }
+
+    void setOnePerson() throws IOException {
+
+    }
 }
