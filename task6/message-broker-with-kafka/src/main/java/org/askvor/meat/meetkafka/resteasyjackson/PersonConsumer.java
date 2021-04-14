@@ -7,12 +7,12 @@ import org.jboss.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class MovieConsumer {
+public class PersonConsumer {
 
-    private final Logger logger = Logger.getLogger(MovieConsumer.class);
+    private final Logger logger = Logger.getLogger(PersonConsumer.class);
 
-    @Incoming("movies-in")
+    @Incoming("persons-in")
     public void receive(Record<Integer, String> record) {
-        logger.infof("Got a movie: %d - %s", record.key(), record.value());
+        logger.infof("Got a person: %d - %s", record.key(), record.value());
     }
 }

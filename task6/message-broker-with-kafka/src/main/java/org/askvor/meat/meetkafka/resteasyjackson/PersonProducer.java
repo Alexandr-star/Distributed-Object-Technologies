@@ -1,7 +1,9 @@
 package org.askvor.meat.meetkafka.resteasyjackson;
 
 import io.smallrye.reactive.messaging.kafka.Record;
-import org.askvor.meat.meetkafka.resteasyjackson.models.Movie;
+import org.askvor.meat.meetkafka.resteasyjackson.models.Address;
+import org.askvor.meat.meetkafka.resteasyjackson.models.Person;
+import org.askvor.meat.meetkafka.resteasyjackson.models.Telephone;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
@@ -9,13 +11,16 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class MovieProducer {
+public class PersonProducer {
 
     @Inject
-    @Channel("movies-out")
+    @Channel("persons-out")
     Emitter<Record<Integer, String>> emitter;
 
-    public void sendMovieToKafka(Movie movie) {
-        emitter.send(Record.of(movie.year, movie.title));
+    public void sendPersonToKafka(Person person) {
+        emitter.send(Record.of(
+                person.getId(),
+                person.getFirstName()
+        ));
     }
 }
