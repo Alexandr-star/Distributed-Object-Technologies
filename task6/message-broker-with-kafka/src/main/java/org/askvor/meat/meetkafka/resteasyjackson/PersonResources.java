@@ -19,7 +19,8 @@ public class PersonResources {
     PersonProducer _personProducer;
 
     @POST
-    public Response sendPerson(Person person){
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response addPerson(Person person){
         _personProducer.sendPersonToKafka(person);
         return Response.accepted().build();
     }
