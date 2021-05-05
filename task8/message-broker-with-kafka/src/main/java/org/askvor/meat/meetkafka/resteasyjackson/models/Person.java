@@ -13,13 +13,20 @@ public class Person implements Serializable {
     private Telephone telephone;
     private Salary salary;
 
-    public Person(int id, String email, String firstName, String lastName, Address address, Telephone telephone) {
+    public Person(int id,
+                  String email,
+                  String firstName,
+                  String lastName,
+                  Address address,
+                  Telephone telephone,
+                  Salary salary) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName  = lastName;
         this.address = address;
         this.telephone = telephone;
+        this.salary = salary;
     }
 
     public Person() { }
@@ -72,6 +79,14 @@ public class Person implements Serializable {
         this.telephone = telephone;
     }
 
+    public Salary getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Salary salary) {
+        this.salary = salary;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -81,6 +96,7 @@ public class Person implements Serializable {
                 ", email='" + email + '\'' +
                 ", address=" + address +
                 ", telephone=" + telephone +
+                ", salary=" + salary +
                 '}';
     }
 
@@ -89,11 +105,11 @@ public class Person implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return id == person.id && firstName.equals(person.firstName) && lastName.equals(person.lastName) && email.equals(person.email) && address.equals(person.address) && telephone.equals(person.telephone);
+        return id == person.id && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(email, person.email) && Objects.equals(address, person.address) && Objects.equals(telephone, person.telephone) && Objects.equals(salary, person.salary);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, address, telephone);
+        return Objects.hash(id, firstName, lastName, email, address, telephone, salary);
     }
 }
